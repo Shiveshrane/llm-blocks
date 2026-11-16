@@ -209,6 +209,17 @@ class MoE(FFNSpec):
     z_loss_coef: float = 0.0
     bias_update_rate: float = 0.0
 
+    def short_repr(self) -> str:
+        """Compact form, e.g. ``MoE(16×SwiGLU(hidden_dim=1024), top2, +1 shared)``."""
+        parts = [f"{self.num_experts}×{self.expert.short_repr()}", f"top{self.top_k}"]
+        if self.shared_experts:
+            parts.append(f"+{self.shared_experts} shared")
+        if self.router != "softmax":
+            parts.append(self.router)
+        if self.capacity_factor is not None:
+            parts.append(f"cap={self.capacity_factor}")
+        return f"MoE({', '.join(parts)})"
+
     def build(self, ctx: BuildContext) -> MoELayer:
         if isinstance(self.expert, MoE):
             raise SpecError("MoE: nested MoE experts are not supported")

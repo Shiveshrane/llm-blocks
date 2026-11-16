@@ -33,7 +33,7 @@ def _runs(blocks: List[Block]) -> List[Tuple[int, int, Block]]:
     return runs
 
 
-def to_svg(model_or_config, width: int = 560) -> str:
+def to_svg(model_or_config, width: int = 760) -> str:
     """Render the layer stack as an SVG block diagram (bottom = input, top = output)."""
     cfg = _config(model_or_config)
     runs = _runs(cfg.resolve_layers())
@@ -67,15 +67,16 @@ def to_svg(model_or_config, width: int = 560) -> str:
             out.append(f'<text x="{pad + inner_w - 8}" y="{y + 16}" text-anchor="end" fill="#555">'
                        f'{escape(b.norm_position + "-norm " + type(b.norm).__name__ + " · " + type(b.residual).__name__)}</text>')
             half = (inner_w - 24) / 2
+            max_chars = int((half - 12) / 7.0)
             bx = pad + 8
             out.append(f'<rect x="{bx}" y="{y + 24}" width="{half}" height="{row_h - 32}" rx="5" '
                        f'fill="{_COLORS.get(mname, _COLORS["_other"])}"/>')
-            out.append(f'<text x="{bx + 6}" y="{y + 44}" fill="#fff">{escape(_clip(b.mixer.short_repr(), 44))}</text>')
+            out.append(f'<text x="{bx + 6}" y="{y + 44}" fill="#fff">{escape(_clip(b.mixer.short_repr(), max_chars))}</text>')
             if fname is not None:
                 fx = bx + half + 8
                 color = _COLORS.get(fname, _COLORS["_ffn"])
                 out.append(f'<rect x="{fx}" y="{y + 24}" width="{half}" height="{row_h - 32}" rx="5" fill="{color}"/>')
-                out.append(f'<text x="{fx + 6}" y="{y + 44}" fill="#fff">{escape(_clip(b.ffn.short_repr(), 44))}</text>')  # type: ignore[union-attr]
+                out.append(f'<text x="{fx + 6}" y="{y + 44}" fill="#fff">{escape(_clip(b.ffn.short_repr(), max_chars))}</text>')  # type: ignore[union-attr]
         else:
             out.append(f'<rect x="{pad}" y="{y}" width="{inner_w}" height="{row_h - 20}" rx="8" fill="#e8e8e8" stroke="#888"/>')
             out.append(f'<text x="{pad + 8}" y="{y + 27}"><tspan font-weight="bold">{escape(title)}</tspan>'

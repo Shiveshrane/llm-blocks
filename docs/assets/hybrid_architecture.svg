@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="542" font-family="Helvetica, Arial, sans-serif" font-size="12">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="20" y="24" font-size="14" font-weight="bold">LLM  dim=1024  layers=8</text>
+<rect x="20" y="40" width="720" height="44" rx="8" fill="#e8e8e8" stroke="#888"/>
+<text x="28" y="67"><tspan font-weight="bold">LM head</tspan>  Linear 1024→32000</text>
+<rect x="20" y="98" width="720" height="44" rx="8" fill="#e8e8e8" stroke="#888"/>
+<text x="28" y="125"><tspan font-weight="bold">Final norm</tspan>  RMSNorm</text>
+<rect x="20" y="156" width="720" height="64" rx="8" fill="#f4f4f4" stroke="#888"/>
+<text x="28" y="172" font-weight="bold">layer 7</text>
+<text x="732" y="172" text-anchor="end" fill="#555">pre-norm RMSNorm · Residual</text>
+<rect x="28" y="180" width="348.0" height="32" rx="5" fill="#4C78A8"/>
+<text x="34" y="200" fill="#fff">GQA(heads=16, kv_heads=4)</text>
+<rect x="384.0" y="180" width="348.0" height="32" rx="5" fill="#B279A2"/>
+<text x="390.0" y="200" fill="#fff">MoE(16×SwiGLU(hidden_dim=1024), top2, +1 shared)</text>
+<rect x="20" y="234" width="720" height="64" rx="8" fill="#f4f4f4" stroke="#888"/>
+<text x="28" y="250" font-weight="bold">layers 4–6  (×3)</text>
+<text x="732" y="250" text-anchor="end" fill="#555">pre-norm RMSNorm · Residual</text>
+<rect x="28" y="258" width="348.0" height="32" rx="5" fill="#F58518"/>
+<text x="34" y="278" fill="#fff">Mamba2()</text>
+<rect x="384.0" y="258" width="348.0" height="32" rx="5" fill="#54A24B"/>
+<text x="390.0" y="278" fill="#fff">SwiGLU(hidden_dim=2816)</text>
+<rect x="20" y="312" width="720" height="64" rx="8" fill="#f4f4f4" stroke="#888"/>
+<text x="28" y="328" font-weight="bold">layer 3</text>
+<text x="732" y="328" text-anchor="end" fill="#555">pre-norm RMSNorm · Residual</text>
+<rect x="28" y="336" width="348.0" height="32" rx="5" fill="#4C78A8"/>
+<text x="34" y="356" fill="#fff">GQA(heads=16, kv_heads=4)</text>
+<rect x="384.0" y="336" width="348.0" height="32" rx="5" fill="#B279A2"/>
+<text x="390.0" y="356" fill="#fff">MoE(16×SwiGLU(hidden_dim=1024), top2, +1 shared)</text>
+<rect x="20" y="390" width="720" height="64" rx="8" fill="#f4f4f4" stroke="#888"/>
+<text x="28" y="406" font-weight="bold">layers 0–2  (×3)</text>
+<text x="732" y="406" text-anchor="end" fill="#555">pre-norm RMSNorm · Residual</text>
+<rect x="28" y="414" width="348.0" height="32" rx="5" fill="#F58518"/>
+<text x="34" y="434" fill="#fff">Mamba2()</text>
+<rect x="384.0" y="414" width="348.0" height="32" rx="5" fill="#54A24B"/>
+<text x="390.0" y="434" fill="#fff">SwiGLU(hidden_dim=2816)</text>
+<rect x="20" y="468" width="720" height="44" rx="8" fill="#e8e8e8" stroke="#888"/>
+<text x="28" y="495"><tspan font-weight="bold">Embedding</tspan>  32000 × 1024</text>
+</svg>
