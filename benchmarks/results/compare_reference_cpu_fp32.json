@@ -1,0 +1,64 @@
+{
+  "device": "cpu",
+  "precision": "fp32",
+  "torch": "2.15.0",
+  "machine": "arm64",
+  "processor": "arm",
+  "config": {
+    "device": "cpu",
+    "precision": "fp32",
+    "dim": 256,
+    "depth": 4,
+    "heads": 8,
+    "kv_heads": 2,
+    "vocab": 8000,
+    "batch": 4,
+    "seq": 256,
+    "steps": 5,
+    "decode_tokens": 64,
+    "compile": false
+  },
+  "params": 6719744,
+  "fp32_max_logit_diff": 4.76837158203125e-07,
+  "rows": [
+    {
+      "impl": "llm_blocks",
+      "bench": "train_step",
+      "ms": 73.5644169999432,
+      "tokens_per_sec": 13919.773196881184
+    },
+    {
+      "impl": "reference",
+      "bench": "train_step",
+      "ms": 74.16091699997196,
+      "tokens_per_sec": 13807.812004271565
+    },
+    {
+      "impl": "llm_blocks",
+      "bench": "prefill_128",
+      "ms": 3.048583000236249
+    },
+    {
+      "impl": "llm_blocks",
+      "bench": "decode_64_tok",
+      "ms": 64.70941699990362,
+      "ms_per_token": 0.9634505312448027
+    },
+    {
+      "impl": "reference",
+      "bench": "prefill_128",
+      "ms": 3.7392499998532003
+    },
+    {
+      "impl": "reference",
+      "bench": "decode_64_tok",
+      "ms": 62.182083999687165,
+      "ms_per_token": 0.9131692812474057
+    }
+  ],
+  "ratio_llm_blocks_over_reference": {
+    "decode_64_tok": 1.0406440704082733,
+    "prefill_128": 0.8152926389933633,
+    "train_step": 0.9919566798232958
+  }
+}

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-blocks"
+version = "0.1.0"
+description = "Composable, swappable building blocks for LLM architecture research (PyTorch)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+dependencies = ["torch>=2.5"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "numpy"]
+reference = ["transformers>=4.57"]  # trusted reference implementations used by optional tests
+
+[tool.setuptools.packages.find]
+include = ["llm_blocks*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "slow: longer-running tests",
+    "reference: compares against HuggingFace transformers implementations",
+]

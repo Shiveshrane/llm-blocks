@@ -1,0 +1,14 @@
+llm-blocks
+
+This project contains code derived from or closely following:
+
+* state-spaces/mamba (Apache-2.0), Tri Dao & Albert Gu — the chunked SSD algorithm in
+  llm_blocks/kernels/ssd.py follows mamba_ssm/modules/ssd_minimal.py; the Mamba-2 layer layout
+  and initialisation follow mamba_ssm/modules/mamba2.py.
+* fla-org/flash-linear-attention (MIT) — layer layout of the Gated DeltaNet mixer
+  (llm_blocks/nn/mixers/gated_deltanet.py).
+* ALiBi slope computation follows the reference implementation of Press et al. (ofirpress/attention_with_linear_biases, MIT).
+
+Reference tests compare against HuggingFace transformers (Apache-2.0) implementations of Llama,
+DeepSeek-V3 attention, Mamba-2 and the Qwen3-Next gated delta rule; transformers is an optional
+test dependency and none of its code is vendored.
