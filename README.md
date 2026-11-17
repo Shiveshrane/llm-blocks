@@ -144,7 +144,7 @@ nn.LLM(vocab_size=32000, dim=768, layers=[nn.Block(mixer=nn.Mamba2(position=nn.R
 
 | Family | Blocks |
 |---|---|
-| **Sequence mixers** | `MHA` · `MQA` · `GQA` · `MLA` (DeepSeek-V2 latent attention, compressed cache, absorbed decoding) · `Mamba2` · `GatedDeltaNet` · `KDA` (Kimi Delta Attention, per-channel decay) |
+| **Sequence mixers** | `MHA` · `MQA` · `GQA` · `MLA` (DeepSeek-V2 latent attention, compressed cache, absorbed decoding) · `Mamba2` · `GatedDeltaNet` · `KDA` ([Kimi Delta Attention](https://arxiv.org/abs/2510.26692), per-channel decay; ported from [MiniKimiK3](https://github.com/Shiveshrane/MiniKimiK3)) |
 | **Feed-forward** | `FFN` · `GeluFFN` · `ReluFFN` · `GLU` · `SwiGLU` · `GeGLU` · `MoE`: top-k, softmax or sigmoid routing, shared experts, dropless or capacity dispatch, load-balance and z-losses, aux-loss-free bias balancing |
 | **Normalization** | `RMSNorm` · `LayerNorm` · `QKNorm` (`qk_norm=True`) · pre- or post-norm blocks |
 | **Positions** | `RoPE` (incl. partial) · `ALiBi` · `LearnedPositions` · `NoPE`, each checked for compatibility with its mixer |
@@ -376,12 +376,20 @@ examples/  benchmarks/  tests/  docs/
 
 The Mamba-2 SSD algorithm follows [state-spaces/mamba](https://github.com/state-spaces/mamba)
 (Apache-2.0). The Gated DeltaNet layer follows
-[flash-linear-attention](https://github.com/fla-org/flash-linear-attention) (MIT). The KDA layer and its chunked kernel are ported from
-[MiniKimiK3](https://github.com/Shiveshrane/MiniKimiK3). Reference tests
+[flash-linear-attention](https://github.com/fla-org/flash-linear-attention) (MIT). Reference tests
 use [HuggingFace transformers](https://github.com/huggingface/transformers). Papers implemented
 include DeepSeek-V2 (MLA), Mamba-2, Gated DeltaNet, [Kimi Linear](https://arxiv.org/abs/2510.26692) (KDA), Hyper-Connections,
 [mHC](https://arxiv.org/abs/2512.24880) and [Attention Residuals](https://arxiv.org/abs/2603.15031).
 See [NOTICE](NOTICE).
+
+**Kimi Delta Attention.** `nn.KDA` implements KDA from Kimi Team,
+[*Kimi Linear: An Expressive, Efficient Attention Architecture*](https://arxiv.org/abs/2510.26692)
+(arXiv:2510.26692, 2025). The layer and its chunked kernel are ported from
+[MiniKimiK3](https://github.com/Shiveshrane/MiniKimiK3) by [Shiveshrane](https://github.com/Shiveshrane),
+a from-scratch PyTorch implementation of the chunked algorithm written to run on Apple silicon (MPS)
+without the CUDA/Triton kernels of the official release. Its secondary decay tiles keep the
+per-channel decay in float32 range, and its triangular inverse uses repeated squaring instead of a
+triangular solve.
 
 ## Citation
 
@@ -389,6 +397,24 @@ See [NOTICE](NOTICE).
 @software{llm_blocks,
   title  = {llm-blocks: composable building blocks for LLM architecture research},
   url    = {https://github.com/cneuralnetwork/llm-blocks},
+  year   = {2026}
+}
+```
+
+If you use `nn.KDA`, please also cite the Kimi Linear paper and MiniKimiK3:
+
+```bibtex
+@article{kimi_linear_2025,
+  title   = {Kimi Linear: An Expressive, Efficient Attention Architecture},
+  author  = {{Kimi Team}},
+  journal = {arXiv preprint arXiv:2510.26692},
+  year    = {2025}
+}
+
+@software{minikimik3,
+  title  = {MiniKimiK3: Kimi Delta Attention in pure PyTorch},
+  author = {Shiveshrane},
+  url    = {https://github.com/Shiveshrane/MiniKimiK3},
   year   = {2026}
 }
 ```
