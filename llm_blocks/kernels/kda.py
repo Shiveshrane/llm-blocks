@@ -9,7 +9,7 @@ of one scalar per head. Per head, with fast-weight state ``S`` of shape ``(d_k, 
 
 i.e. ``S_t = (I - beta_t k_t k_t^T) Diag(alpha_t) S_{t-1} + beta_t k_t v_t^T``.
 
-Chunked algorithm (ported from MiniKimiK3, ``model/KDA_chunk.py``; derivation in its MATH.md):
+Chunked algorithm (written from scratch in PyTorch to run on MPS, without CUDA/Triton kernels):
 
 * With ``G`` the within-chunk cumulative log-decay (per channel), the WY system for the
   effective writes is ``(I + Diag(beta) M) U = Diag(beta) (V - K^ S_0)`` with

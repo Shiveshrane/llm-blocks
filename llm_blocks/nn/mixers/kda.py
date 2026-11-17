@@ -1,6 +1,6 @@
 """Kimi Delta Attention mixer (Kimi Team, "Kimi Linear", arXiv:2510.26692).
 
-Layer structure follows ``KDA`` in MiniKimiK3 (``model/KDA.py``):
+Layer structure:
 
 * projections for q, k, v and an output gate; short causal depthwise convolutions + SiLU on
   q/k/v; per-head L2-normalised q and k;

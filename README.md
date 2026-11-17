@@ -144,7 +144,7 @@ nn.LLM(vocab_size=32000, dim=768, layers=[nn.Block(mixer=nn.Mamba2(position=nn.R
 
 | Family | Blocks |
 |---|---|
-| **Sequence mixers** | `MHA` · `MQA` · `GQA` · `MLA` (DeepSeek-V2 latent attention, compressed cache, absorbed decoding) · `Mamba2` · `GatedDeltaNet` · `KDA` ([Kimi Delta Attention](https://arxiv.org/abs/2510.26692), per-channel decay; ported from [MiniKimiK3](https://github.com/Shiveshrane/MiniKimiK3)) |
+| **Sequence mixers** | `MHA` · `MQA` · `GQA` · `MLA` (DeepSeek-V2 latent attention, compressed cache, absorbed decoding) · `Mamba2` · `GatedDeltaNet` · `KDA` ([Kimi Delta Attention](https://arxiv.org/abs/2510.26692), per-channel decay; chunked algorithm written from scratch to run on MPS) |
 | **Feed-forward** | `FFN` · `GeluFFN` · `ReluFFN` · `GLU` · `SwiGLU` · `GeGLU` · `MoE`: top-k, softmax or sigmoid routing, shared experts, dropless or capacity dispatch, load-balance and z-losses, aux-loss-free bias balancing |
 | **Normalization** | `RMSNorm` · `LayerNorm` · `QKNorm` (`qk_norm=True`) · pre- or post-norm blocks |
 | **Positions** | `RoPE` (incl. partial) · `ALiBi` · `LearnedPositions` · `NoPE`, each checked for compatibility with its mixer |
@@ -384,12 +384,10 @@ See [NOTICE](NOTICE).
 
 **Kimi Delta Attention.** `nn.KDA` implements KDA from Kimi Team,
 [*Kimi Linear: An Expressive, Efficient Attention Architecture*](https://arxiv.org/abs/2510.26692)
-(arXiv:2510.26692, 2025). The layer and its chunked kernel are ported from
-[MiniKimiK3](https://github.com/Shiveshrane/MiniKimiK3) by [Shiveshrane](https://github.com/Shiveshrane),
-a from-scratch PyTorch implementation of the chunked algorithm written to run on Apple silicon (MPS)
-without the CUDA/Triton kernels of the official release. Its secondary decay tiles keep the
-per-channel decay in float32 range, and its triangular inverse uses repeated squaring instead of a
-triangular solve.
+(arXiv:2510.26692, 2025). The chunked algorithm is written from scratch in PyTorch to run on
+Apple silicon (MPS), without the CUDA/Triton kernels of the official release: secondary decay
+tiles keep the per-channel decay in float32 range, and the triangular inverse uses repeated
+squaring instead of a triangular solve.
 
 ## Citation
 
@@ -401,7 +399,7 @@ triangular solve.
 }
 ```
 
-If you use `nn.KDA`, please also cite the Kimi Linear paper and MiniKimiK3:
+If you use `nn.KDA`, please also cite the Kimi Linear paper:
 
 ```bibtex
 @article{kimi_linear_2025,
@@ -409,13 +407,6 @@ If you use `nn.KDA`, please also cite the Kimi Linear paper and MiniKimiK3:
   author  = {{Kimi Team}},
   journal = {arXiv preprint arXiv:2510.26692},
   year    = {2025}
-}
-
-@software{minikimik3,
-  title  = {MiniKimiK3: Kimi Delta Attention in pure PyTorch},
-  author = {Shiveshrane},
-  url    = {https://github.com/Shiveshrane/MiniKimiK3},
-  year   = {2026}
 }
 ```
 
